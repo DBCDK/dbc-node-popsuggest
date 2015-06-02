@@ -1,0 +1,25 @@
+# ============
+# LOGS / REPORTS
+# ============
+*.log
+report.xml
+output
+
+# ============
+# BUILDS
+# ============
+dist/*
+
+# ============
+# NODE_MODULES
+# ============
+node_modules
+
+
+# ============
+# IDEA
+# ============
+.idea
+*.iml
+
+

@@ -1,0 +1,18 @@
+{
+  "name": "dbc-node-opensuggest",
+  "version": "0.0.1",
+  "description": "Client for the DBC suggestion service",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DBCDK/dbc-node-opensuggest#develop"
+  },
+  "author": "DBC A/S",
+  "license": "ISC",
+  "devDependencies": {
+    "broccoli": "^0.16.3"
+  }
+}
