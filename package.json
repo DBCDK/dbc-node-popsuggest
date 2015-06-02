@@ -4,7 +4,9 @@
   "description": "Client for the DBC suggestion service",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "build": "rm -rf ./dist && broccoli build dist",
+    "watch": "node watchnbuild.js"
   },
   "repository": {
     "type": "git",
@@ -13,6 +15,12 @@
   "author": "DBC A/S",
   "license": "ISC",
   "devDependencies": {
-    "broccoli": "^0.16.3"
+    "babel-eslint": "^3.1.10",
+    "broccoli": "^0.16.3",
+    "broccoli-babel-transpiler": "^5.0.0",
+    "node-watch": "^0.3.4"
+  },
+  "dependencies": {
+    "node-rest-client": "^1.5.1"
   }
 }
