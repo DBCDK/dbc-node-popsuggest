@@ -2,10 +2,10 @@
  * Contains all eventlisteners that should be instantiated on new connections
  * @type {Array}
  */
-"use strict";
+'use strict';
 
-var _listeners = new Array();
-var _connections = new Array();
+var _listeners = [];
+var _connections = [];
 
 /**
  * The Dispatcher is a wrapper for socket.io. It will handle all communication
@@ -16,25 +16,16 @@ var _connections = new Array();
 function Dispatcher() {
 
   /**
-   * Initialize dispatcher with a socket.io server
-   * @param  {IoSocketServer} io instance of socket.io
-   * @return {null}
-   */
-  function init(io) {
-    io.on("connection", makeConnection);
-  }
-
-  /**
    * Callback method for new connections
    * @param  {Socket} connection a new socket connection
    * @return {null}
    */
   function makeConnection(connection) {
     var user = connection.request.session && connection.request.session.passport && connection.request.session.passport.user || null;
-    _listeners.map(function (listener) {
-      connection.on(listener.type + "Request", function (data) {
-        listener.callback(data, user).then(function (data) {
-          connection.emit(listener.type + "Response", data);
+    _listeners.map(function(listener) {
+      connection.on(listener.type + 'Request', function(data) {
+        listener.callback(data, user).then(function(data) {
+          connection.emit(listener.type + 'Response', data);
         });
       });
     });
@@ -56,17 +47,26 @@ function Dispatcher() {
     });
   }
 
+  function getUserConnections(user) {
+    return _connections.filter(function(connection) {
+      return connection.user === user;
+    });
+  }
+
   function emitToUser(user, type, data) {
     var connections = getUserConnections(user);
-    connections.map(function (connection) {
+    connections.map(function(connection) {
       return connection.emit(type, data);
     });
   }
 
-  function getUserConnections(user) {
-    return _connections.filter(function (connection) {
-      return connection.user == user;
-    });
+  /**
+   * Initialize dispatcher with a socket.io server
+   * @param  {IoSocketServer} io instance of socket.io
+   * @return {null}
+   */
+  function init(io) {
+    io.on('connection', makeConnection);
   }
 
   // Return factory, with a method for adding an event listener
