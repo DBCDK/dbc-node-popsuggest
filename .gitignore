@@ -1,12 +1,4 @@
 # ============
-# LOGS / REPORTS
-# ============
-*.log
-report.xml
-output
-tmp
-
-# ============
 # NODE_MODULES
 # ============
 node_modules
@@ -17,5 +9,3 @@ node_modules
 # ============
 .idea
 *.iml
-
-
