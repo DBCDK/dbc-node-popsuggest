@@ -17,4 +17,6 @@ function getSuggestions() {
   console.log('getSuggestions');
   console.log('query: ', query);
   console.log(' ');
+
+  return { response: 'testhest' };
 }
