@@ -7,11 +7,6 @@ output
 tmp
 
 # ============
-# BUILDS
-# ============
-dist/*
-
-# ============
 # NODE_MODULES
 # ============
 node_modules
