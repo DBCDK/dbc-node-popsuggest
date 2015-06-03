@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "build": "rm -rf ./dist && broccoli build dist",
-    "watch": "npm run build && node watchnbuild.js"
+    "build": "npm run cleardest && babel ./src -d dist",
+    "cleardest": "rm -rf ./dist",
+    "watch": "npm run cleardest && babel ./src --watch -d dist"
   },
   "repository": {
     "type": "git",
@@ -14,12 +15,6 @@
   },
   "author": "DBC A/S",
   "license": "ISC",
-  "devDependencies": {
-    "babel-eslint": "^3.1.10",
-    "broccoli": "^0.16.3",
-    "broccoli-babel-transpiler": "^5.0.0",
-    "node-watch": "^0.3.4"
-  },
   "dependencies": {
     "node-rest-client": "^1.5.1"
   }
