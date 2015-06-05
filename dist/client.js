@@ -3,25 +3,63 @@
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-exports.test = test;
 exports.init = init;
 exports.getSuggestions = getSuggestions;
+var Promise = require('es6-promise').Promise;
+var Client = require('node-rest-client').Client;
+var client = new Client();
 
-function test() {
-  console.log('hest');
+var endpoint = process.env.POPSUGGEST_ENDPOINT || null; // eslint-disable-line no-process-env
+
+/**
+ * Retrieves data from the webservice based on the parameters given
+ *
+ * @param {Object} params Parameters for the request
+ * @return {Promise}
+ */
+function sendRequest(params) {
+  return new Promise(function (resolve, reject) {
+    client.get(endpoint + '${method}?query=${index}&fields=${fields}', params, function (data, response) {
+      resolve(data);
+    });
+  });
 }
+
+/**
+ * Setting the necessary paramerters for the client to be usable.
+ * The endpoint is only set if endpoint is null to allow setting it through
+ * environment variables.
+ *
+ * @param {Object} config Config object with the necessary parameters to use
+ * the webservice
+ */
 
 function init(config) {
   console.log('init: ', config);
+  if (!endpoint) {
+    endpoint = config.endpoint;
+  }
 }
+
+/**
+ * Constructs the objects of parameters for this type of request.
+ *
+ * @param {Object} query Parameters for the request
+ * @return {Promise}
+ */
 
 function getSuggestions() {
   var query = arguments[0] === undefined ? {} : arguments[0];
 
-  console.log(' ');
-  console.log('getSuggestions');
-  console.log('query: ', query);
-  console.log(' ');
+  var params = {
+    path: {
+      method: 'suggest'
+    },
+    parameters: {
+      index: query.index,
+      fields: query.fields.toString()
+    }
+  };
 
-  return { response: 'testhest' };
+  return sendRequest(params);
 }
