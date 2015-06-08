@@ -16,3 +16,6 @@ path: {
 };```
 
 Returns a Promise object
+
+Endpoint is expected to be set through a configuration object at initialization,
+but can be overwritten by setting the ```POPSUGGEST_ENDPOINT``` environment variable. 
