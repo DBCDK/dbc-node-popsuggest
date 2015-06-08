@@ -5,9 +5,12 @@ Object.defineProperty(exports, '__esModule', {
 });
 exports.init = init;
 exports.getSuggestions = getSuggestions;
-var Promise = require('es6-promise').Promise;
-var Client = require('node-rest-client').Client;
-var client = new Client();
+
+var _es6Promise = require('es6-promise');
+
+var _nodeRestClient = require('node-rest-client');
+
+var client = new _nodeRestClient.Client();
 
 var endpoint = process.env.POPSUGGEST_ENDPOINT || null; // eslint-disable-line no-process-env
 
@@ -18,7 +21,7 @@ var endpoint = process.env.POPSUGGEST_ENDPOINT || null; // eslint-disable-line n
  * @return {Promise}
  */
 function sendRequest(params) {
-  return new Promise(function (resolve, reject) {
+  return new _es6Promise.Promise(function (resolve, reject) {
     client.get(endpoint + '${method}?query=${index}&fields=${fields}', params, function (data, response) {
       resolve(data);
     });
