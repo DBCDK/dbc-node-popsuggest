@@ -1,7 +1,7 @@
 'use strict';
 
-var Promise = require('es6-promise').Promise;
-var Client = require('node-rest-client').Client;
+import {Promise} from 'es6-promise';
+import {Client} from 'node-rest-client';
 var client = new Client();
 
 let endpoint = process.env.POPSUGGEST_ENDPOINT || null; // eslint-disable-line no-process-env
