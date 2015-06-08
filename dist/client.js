@@ -46,23 +46,31 @@ function init(config) {
 
 /**
  * Constructs the objects of parameters for this type of request.
+ * As the query is expected to be an array it is possible to make multiple
+ * requests at once, each returned as a Promise.
  *
- * @param {Object} query Parameters for the request
- * @return {Promise}
+ * @param {Array} query Array of parameter-objects each representing a request
+ * @return {Array} An array of promises is returned
  */
 
 function getSuggestions() {
-  var query = arguments[0] === undefined ? {} : arguments[0];
+  var query = arguments[0] === undefined ? [] : arguments[0];
 
-  var params = {
-    path: {
-      method: 'suggest'
-    },
-    parameters: {
-      index: query.index,
-      fields: query.fields.toString()
-    }
-  };
+  var requests = [];
+  query.forEach(function (value) {
 
-  return sendRequest(params);
+    var params = {
+      path: {
+        method: 'suggest'
+      },
+      parameters: {
+        index: value.index,
+        fields: value.fields.toString()
+      }
+    };
+
+    requests.push(sendRequest(params));
+  });
+
+  return requests;
 }
