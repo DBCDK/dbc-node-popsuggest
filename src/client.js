@@ -1,10 +1,10 @@
 'use strict';
 
-import {Promise} from 'es6-promise';
+import Promise from 'es6-promise';
 import {Client} from 'node-rest-client';
 var client = new Client();
 
-let endpoint = process.env.POPSUGGEST_ENDPOINT || null; // eslint-disable-line no-process-env
+let endpoint = null; // eslint-disable-line no-process-env
 
 /**
  * Retrieves data from the webservice based on the parameters given
@@ -28,11 +28,16 @@ function sendRequest(params) {
  * @param {Object} config Config object with the necessary parameters to use
  * the webservice
  */
-export function init(config) {
+export function init(config = null) {
   console.log('init: ', config);
-  if (!endpoint) {
-    endpoint = config.endpoint;
+
+  if (!config || !config.endpoint) {
+    throw new Error('Expected config object but got null or no endpoint provided');
   }
+
+  endpoint = config.endpoint;
+
+  console.log(endpoint);
 }
 
 /**
