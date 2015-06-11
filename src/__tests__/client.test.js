@@ -30,7 +30,7 @@ describe('Test methods in client.js', () => {
       endpoint: 'http://devel7:8888/'
     });
 
-    let Promise = PopSuggest.getSuggestions([{index: 'term.creator', query: 'Rowl', fields: ['term.creator']}]);
+    const Promise = PopSuggest.getSuggestions([{index: 'term.creator', query: 'Rowl', fields: ['term.creator']}]);
 
     assert.isArray(Promise, 'Got array');
     return Promise[0].then((data) => {
@@ -44,7 +44,7 @@ describe('Test methods in client.js', () => {
       endpoint: 'http://devel7:8888/nonexistingurl/'
     });
 
-    Promise = PopSuggest.getSuggestions([{index: 'term.creator', query: 'Rowl', fields: ['term.creator']}]);
+    const Promise = PopSuggest.getSuggestions([{index: 'term.creator', query: 'Rowl', fields: ['term.creator']}]);
 
     assert.isArray(Promise, 'Got array');
     return Promise[0].then((data) => {
