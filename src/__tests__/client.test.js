@@ -29,6 +29,39 @@ describe('Test methods in client.js', () => {
       name: 'popsuggest',
       endpoint: 'http://devel7:8888/'
     });
-    PopSuggest.getSuggestions([{index:'', fields:['']}])
+
+    let Promise = PopSuggest.getSuggestions([{index: 'term.creator', query: 'Rowl', fields: ['term.creator']}]);
+
+    assert.isArray(Promise, 'Got array');
+    return Promise[0].then((data) => {
+      assert.isObject(data, 'got object');
+    });
+  });
+
+  it('Test bad URL', () => {
+    PopSuggest.init({
+      name: 'popsuggest',
+      endpoint: 'http://devel7:8888/nonexistingurl/'
+    });
+
+    Promise = PopSuggest.getSuggestions([{index: 'term.creator', query: 'Rowl', fields: ['term.creator']}]);
+
+    assert.isArray(Promise, 'Got array');
+    return Promise[0].then((data) => {
+    }).catch((err) => {
+      assert.isObject(err, 'got error object');
+
+      assert.isDefined(err.type, 'Type is defined');
+      assert.strictEqual(err.type, 'Error', 'Type equals Error');
+
+      assert.isDefined(err.statusCode, 'statusCode is defined');
+      assert.strictEqual(err.statusCode, 404, 'statusCode is 404');
+
+      assert.isDefined(err.statusMessage, 'statusMessage is defined');
+      assert.strictEqual(err.statusMessage, 'Not Found', 'statusMessage is "Nor Found"');
+
+      assert.isDefined(err.response, 'response is defined');
+      assert.isObject(err.response, 'response is of type object');
+    });
   });
 });
