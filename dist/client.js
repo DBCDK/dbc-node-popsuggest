@@ -12,7 +12,7 @@ var _nodeRestClient = require('node-rest-client');
 
 var client = new _nodeRestClient.Client();
 
-var endpoint = process.env.POPSUGGEST_ENDPOINT || null; // eslint-disable-line no-process-env
+var endpoint = null; // eslint-disable-line no-process-env
 
 /**
  * Retrieves data from the webservice based on the parameters given
@@ -22,8 +22,17 @@ var endpoint = process.env.POPSUGGEST_ENDPOINT || null; // eslint-disable-line n
  */
 function sendRequest(params) {
   return new _es6Promise.Promise(function (resolve, reject) {
-    client.get(endpoint + '${method}?query=${index}&fields=${fields}', params, function (data, response) {
-      resolve(data);
+    client.get(endpoint + '${method}?query="${index}:${query}*"&fields=${fields}"', params, function (data, response) {
+      if (response.statusCode === 200) {
+        resolve(data);
+      } else {
+        reject({
+          type: 'Error',
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          response: response
+        });
+      }
     });
   });
 }
@@ -37,11 +46,14 @@ function sendRequest(params) {
  * the webservice
  */
 
-function init(config) {
-  console.log('init: ', config);
-  if (!endpoint) {
-    endpoint = config.endpoint;
+function init() {
+  var config = arguments[0] === undefined ? null : arguments[0];
+
+  if (!config || !config.endpoint) {
+    throw new Error('Expected config object but got null or no endpoint provided');
   }
+
+  endpoint = config.endpoint;
 }
 
 /**
@@ -61,10 +73,9 @@ function getSuggestions() {
 
     var params = {
       path: {
-        method: 'suggest'
-      },
-      parameters: {
+        method: 'suggest',
         index: value.index,
+        query: value.query,
         fields: value.fields.toString()
       }
     };

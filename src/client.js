@@ -1,6 +1,6 @@
 'use strict';
 
-import Promise from 'es6-promise';
+import {Promise} from 'es6-promise';
 import {Client} from 'node-rest-client';
 var client = new Client();
 
@@ -14,8 +14,18 @@ let endpoint = null; // eslint-disable-line no-process-env
  */
 function sendRequest(params) {
   return new Promise((resolve, reject) => {
-    client.get(endpoint + '${method}?query=${index}&fields=${fields}', params, (data, response) => {
-      resolve(data);
+    client.get(endpoint + '${method}?query="${index}:${query}*"&fields=${fields}"', params, (data, response) => {
+      if (response.statusCode === 200) {
+        resolve(data);
+      }
+      else {
+        reject({
+          type: 'Error',
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          response: response
+        });
+      }
     });
   });
 }
@@ -29,15 +39,11 @@ function sendRequest(params) {
  * the webservice
  */
 export function init(config = null) {
-  console.log('init: ', config);
-
   if (!config || !config.endpoint) {
     throw new Error('Expected config object but got null or no endpoint provided');
   }
 
   endpoint = config.endpoint;
-
-  console.log(endpoint);
 }
 
 /**
@@ -54,10 +60,9 @@ export function getSuggestions(query = []) {
 
     const params = {
       path: {
-        method: 'suggest'
-      },
-      parameters: {
+        method: 'suggest',
         index: value.index,
+        query: value.query,
         fields: value.fields.toString()
       }
     };
