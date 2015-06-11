@@ -20,7 +20,7 @@ describe('Test methods in client.js', () => {
     expect(() => init(config)).to.not.throw(Error);
   });
 
-  it('Test getSuggestions Method', () => {
+  it('Test getSuggestions Method on good URL', () => {
     assert.isNotNull(PopSuggest.getSuggestions());
     assert.isArray(PopSuggest.getSuggestions(), 'Got array');
     assert.lengthOf(PopSuggest.getSuggestions(), 0, 'Array is empty');
@@ -38,7 +38,7 @@ describe('Test methods in client.js', () => {
     });
   });
 
-  it('Test bad URL', () => {
+  it('Test getSuggestions Method on bad URL', () => {
     PopSuggest.init({
       name: 'popsuggest',
       endpoint: 'http://devel7:8888/nonexistingurl/'
