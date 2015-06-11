@@ -7,9 +7,9 @@
     "test": "mocha --compilers js:babel/register src/__tests__",
     "test:watch": "mocha --compilers js:babel/register src/__tests__ -w",
     "test:junit": "mocha --compilers js:babel/register src/__tests__ -R mocha-junit-reporter",
-    "build": "npm run cleardest && babel ./src -d dist",
+    "build": "npm run cleardest && babel ./src -d dist --ignore __tests__",
     "cleardest": "rm -rf ./dist",
-    "watch": "npm run cleardest && babel ./src --watch -d dist"
+    "watch": "npm run cleardest && babel ./src --watch -d dist --ignore __tests__"
   },
   "repository": {
     "type": "git",
