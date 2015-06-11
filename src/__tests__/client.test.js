@@ -1,14 +1,14 @@
 'use strict';
 
-import * as Client from '../client.js';
+import * as PopSuggest from '../client.js';
 import {assert, expect} from 'chai';
 
 describe('Test methods in client.js', () => {
 
   it('Test init method', () => {
-    expect(Client.init).is.not.null;
+    expect(PopSuggest.init).is.not.null;
 
-    const init = Client.init;
+    const init = PopSuggest.init;
     assert.isFunction(init, 'init is a function');
 
     expect(init).to.throw('Expected config object but got null or no endpoint provided');
@@ -21,8 +21,14 @@ describe('Test methods in client.js', () => {
   });
 
   it('Test getSuggestions Method', () => {
-    assert.isNotNull(Client.getSuggestions());
-    assert.isArray(Client.getSuggestions(), 'Got array');
-    assert.lengthOf(Client.getSuggestions(), 0, 'Array is empty');
+    assert.isNotNull(PopSuggest.getSuggestions());
+    assert.isArray(PopSuggest.getSuggestions(), 'Got array');
+    assert.lengthOf(PopSuggest.getSuggestions(), 0, 'Array is empty');
+
+    PopSuggest.init({
+      name: 'popsuggest',
+      endpoint: 'http://devel7:8888/'
+    });
+    PopSuggest.getSuggestions([{index:'', fields:['']}])
   });
 });
