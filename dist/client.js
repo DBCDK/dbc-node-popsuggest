@@ -4,7 +4,6 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 exports.init = init;
-exports.getSuggestions = getSuggestions;
 
 var _es6Promise = require('es6-promise');
 
@@ -64,7 +63,6 @@ function init() {
  * @param {Array} query Array of parameter-objects each representing a request
  * @return {Array} An array of promises is returned
  */
-
 function getSuggestions() {
   var query = arguments[0] === undefined ? [] : arguments[0];
 
@@ -85,3 +83,8 @@ function getSuggestions() {
 
   return requests;
 }
+
+var METHODS = {
+  getSuggestions: getSuggestions
+};
+exports.METHODS = METHODS;

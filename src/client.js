@@ -54,7 +54,7 @@ export function init(config = null) {
  * @param {Array} query Array of parameter-objects each representing a request
  * @return {Array} An array of promises is returned
  */
-export function getSuggestions(query = []) {
+function getSuggestions(query = []) {
   let requests = [];
   query.forEach((value) => {
 
@@ -72,3 +72,7 @@ export function getSuggestions(query = []) {
 
   return requests;
 }
+
+export const METHODS = {
+  getSuggestions: getSuggestions
+};
