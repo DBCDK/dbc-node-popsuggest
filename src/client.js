@@ -14,7 +14,7 @@ let endpoint = null; // eslint-disable-line no-process-env
  */
 function sendRequest(params) {
   return new Promise((resolve, reject) => {
-    client.get(endpoint + '${method}?query="${index}:${query}*"&fields=${fields}"', params, (data, response) => {
+    client.get(endpoint + '${method}?query=${index}:${query}*&fields=${fields}', params, (data, response) => {
       if (response.statusCode === 200) {
         resolve(data);
       }
