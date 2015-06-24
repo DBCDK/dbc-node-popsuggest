@@ -11,7 +11,9 @@ var _nodeRestClient = require('node-rest-client');
 
 var client = new _nodeRestClient.Client();
 
-var endpoint = null; // eslint-disable-line no-process-env
+var endpoint = null;
+var profile = null;
+var serviceCallback = '';
 
 /**
  * Retrieves data from the webservice based on the parameters given
@@ -21,10 +23,11 @@ var endpoint = null; // eslint-disable-line no-process-env
  */
 function sendRequest(params) {
   return new _es6Promise.Promise(function (resolve, reject) {
-    client.get(endpoint + '${method}?query=${index}:${query}*&fields=${fields}', params, function (data, response) {
+    client.get(serviceCallback, params, function (data, response) {
       if (response.statusCode === 200) {
         resolve(data);
       } else {
+        console.log('adsf');
         reject({
           type: 'Error',
           statusCode: response.statusCode,
@@ -34,6 +37,14 @@ function sendRequest(params) {
       }
     });
   });
+}
+
+function setServiceCallback() {
+  var query = '${method}?query=${index}:${query}*';
+  var fields = '&fields=${fields}';
+  var profileParam = profile ? ' and rec.collectionIdentifier:' + profile : '';
+
+  return endpoint + query + profileParam + fields + '&rows=100';
 }
 
 /**
@@ -52,7 +63,12 @@ function init() {
     throw new Error('Expected config object but got null or no endpoint provided');
   }
 
+  if (config.profile) {
+    profile = config.profile;
+  }
+
   endpoint = config.endpoint;
+  serviceCallback = setServiceCallback();
 }
 
 /**
