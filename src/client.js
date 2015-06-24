@@ -4,7 +4,9 @@ import {Promise} from 'es6-promise';
 import {Client} from 'node-rest-client';
 var client = new Client();
 
-let endpoint = null; // eslint-disable-line no-process-env
+let endpoint = null;
+let profile = null;
+let serviceCallback = '';
 
 /**
  * Retrieves data from the webservice based on the parameters given
@@ -14,11 +16,12 @@ let endpoint = null; // eslint-disable-line no-process-env
  */
 function sendRequest(params) {
   return new Promise((resolve, reject) => {
-    client.get(endpoint + '${method}?query=${index}:${query}*&fields=${fields}', params, (data, response) => {
+    client.get(serviceCallback, params, (data, response) => {
       if (response.statusCode === 200) {
         resolve(data);
       }
       else {
+        console.log('adsf');
         reject({
           type: 'Error',
           statusCode: response.statusCode,
@@ -28,6 +31,14 @@ function sendRequest(params) {
       }
     });
   });
+}
+
+function setServiceCallback() {
+  const query = '${method}?query=${index}:${query}*';
+  const fields = '&fields=${fields}';
+  const profileParam = (profile) ? ' and rec.collectionIdentifier:' + profile : '';
+
+  return endpoint + query + profileParam + fields + '&rows=100';
 }
 
 /**
@@ -43,7 +54,12 @@ export function init(config = null) {
     throw new Error('Expected config object but got null or no endpoint provided');
   }
 
+  if (config.profile) {
+    profile = config.profile;
+  }
+
   endpoint = config.endpoint;
+  serviceCallback = setServiceCallback();
 }
 
 /**
