@@ -21,7 +21,6 @@ function sendRequest(params) {
         resolve(data);
       }
       else {
-        console.log('adsf');
         reject({
           type: 'Error',
           statusCode: response.statusCode,
