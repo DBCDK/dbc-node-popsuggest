@@ -18,22 +18,18 @@ describe('Test methods in client.js', () => {
 
     config = {endpoint: 'test'};
     expect(() => init(config)).to.not.throw(Error);
+
+    assert.property(init(config), 'getSuggestions');
   });
 
   it('Test getSuggestions Method on good URL', () => {
-    assert.isNotNull(PopSuggest.getSuggestions());
-    assert.isArray(PopSuggest.getSuggestions(), 'Got array');
-    assert.lengthOf(PopSuggest.getSuggestions(), 0, 'Array is empty');
-
-    PopSuggest.init({
+    let methods = PopSuggest.init({
       name: 'popsuggest',
       endpoint: 'http://devel7:8888/'
     });
 
-    const Promise = PopSuggest.getSuggestions([{index: 'term.creator', query: 'Rowl', fields: ['term.creator']}]);
-
-    assert.isArray(Promise, 'Got array');
-    return Promise[0].then((data) => {
+    const Promise = PopSuggest.getSuggestions({index: 'term.creator', query: 'Rowl', fields: ['term.creator']});
+    return Promise.then((data) => {
       assert.isObject(data, 'got object');
     });
   });
@@ -44,10 +40,9 @@ describe('Test methods in client.js', () => {
       endpoint: 'http://devel7:8888/nonexistingurl/'
     });
 
-    const Promise = PopSuggest.getSuggestions([{index: 'term.creator', query: 'Rowl', fields: ['term.creator']}]);
+    const Promise = PopSuggest.getSuggestions({index: 'term.creator', query: 'Rowl', fields: ['term.creator']});
 
-    assert.isArray(Promise, 'Got array');
-    return Promise[0].then((data) => {
+    return Promise.then((data) => {
     }).catch((err) => {
       assert.isObject(err, 'got error object');
 

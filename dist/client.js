@@ -47,6 +47,27 @@ function setServiceCallback() {
 }
 
 /**
+ * Constructs the objects of parameters for this type of request.
+ * As the query is expected to be an array it is possible to make multiple
+ * requests at once, each returned as a Promise.
+ *
+ * @param {Array} query Array of parameter-objects each representing a request
+ * @return {Array} An array of promises is returned
+ */
+function getSuggestions(value) {
+  var params = {
+    path: {
+      method: 'suggest',
+      index: value.index,
+      query: value.query,
+      fields: value.fields.toString()
+    }
+  };
+
+  return sendRequest(params);
+}
+
+/**
  * Setting the necessary paramerters for the client to be usable.
  * The endpoint is only set if endpoint is null to allow setting it through
  * environment variables.
@@ -56,7 +77,7 @@ function setServiceCallback() {
  */
 
 function init() {
-  var config = arguments[0] === undefined ? null : arguments[0];
+  var config = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
   if (!config || !config.endpoint) {
     throw new Error('Expected config object but got null or no endpoint provided');
@@ -68,35 +89,8 @@ function init() {
 
   endpoint = config.endpoint;
   serviceCallback = setServiceCallback();
-}
 
-/**
- * Constructs the objects of parameters for this type of request.
- * As the query is expected to be an array it is possible to make multiple
- * requests at once, each returned as a Promise.
- *
- * @param {Array} query Array of parameter-objects each representing a request
- * @return {Array} An array of promises is returned
- */
-function getSuggestions() {
-  var query = arguments[0] === undefined ? [] : arguments[0];
-
-  var requests = [];
-  query.forEach(function (value) {
-
-    var params = {
-      path: {
-        method: 'suggest',
-        index: value.index,
-        query: value.query,
-        fields: value.fields.toString()
-      }
-    };
-
-    requests.push(sendRequest(params));
-  });
-
-  return requests;
+  return { getSuggestions: getSuggestions };
 }
 
 var METHODS = {
