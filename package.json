@@ -4,7 +4,7 @@
   "description": "Client for the DBC XP suggestion service",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --compilers js:babel/register src/__tests__ -R mocha-junit-reporter",
+    "test": "mocha --compilers js:babel/register src/__tests__ -R mocha-jenkins-reporter",
     "test:watch": "mocha --compilers js:babel/register src/__tests__ -w",
     "build": "npm run cleardest && babel ./src -d dist --ignore __tests__",
     "cleardest": "rm -rf ./dist",
@@ -29,6 +29,6 @@
     "chai": "^3.0.0",
     "eslint": "^0.21.0",
     "mocha": "^2.2.5",
-    "mocha-junit-reporter": "^1.4.0"
+    "mocha-jenkins-reporter": "^0.1.9"
   }
 }
