@@ -4,7 +4,7 @@ import * as PopSuggest from '../client.js';
 import {assert, expect} from 'chai';
 
 describe('Test methods in client.js', () => {
-
+  /* eslint-disable */
   it('Test init method', () => {
     expect(PopSuggest.init).is.not.null;
 
@@ -59,4 +59,5 @@ describe('Test methods in client.js', () => {
       assert.isObject(err.response, 'response is of type object');
     });
   });
+  /* eslint-enable */
 });

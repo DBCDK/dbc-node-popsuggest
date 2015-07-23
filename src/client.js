@@ -19,8 +19,7 @@ function sendRequest(params) {
     client.get(serviceCallback, params, (data, response) => {
       if (response.statusCode === 200) {
         resolve(data);
-      }
-      else {
+      } else {
         reject({
           type: 'Error',
           statusCode: response.statusCode,
