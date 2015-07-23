@@ -3,6 +3,7 @@
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
+exports.getSuggestions = getSuggestions;
 exports.init = init;
 
 var _es6Promise = require('es6-promise');
@@ -54,6 +55,7 @@ function setServiceCallback() {
  * @param {Array} query Array of parameter-objects each representing a request
  * @return {Array} An array of promises is returned
  */
+
 function getSuggestions(value) {
   var params = {
     path: {
