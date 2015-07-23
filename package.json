@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DBCDK/dbc-node-popsuggest#develop"
+    "url": "git+https://github.com/DBCDK/dbc-node-popsuggest"
   },
   "author": "DBC A/S",
   "license": "ISC",
