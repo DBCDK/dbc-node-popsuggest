@@ -19,7 +19,8 @@ function sendRequest(params) {
     client.get(serviceCallback, params, (data, response) => {
       if (response.statusCode === 200) {
         resolve(data);
-      } else {
+      }
+      else {
         reject({
           type: 'Error',
           statusCode: response.statusCode,
@@ -34,7 +35,7 @@ function sendRequest(params) {
 function setServiceCallback() {
   const query = '${method}?query=${index}:${query}*';
   const fields = '&fields=${fields}';
-  const profileParam = (profile) ? ' and rec.collectionIdentifier:' + profile : '';
+  const profileParam = profile ? ' and rec.collectionIdentifier:' + profile : '';
 
   return endpoint + query + profileParam + fields + '&rows=100';
 }

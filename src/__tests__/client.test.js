@@ -25,7 +25,7 @@ describe('Test methods in client.js', () => {
   it('Test getSuggestions Method on good URL', () => {
     let methods = PopSuggest.init({
       name: 'popsuggest',
-      endpoint: 'http://devel7:8888/'
+      endpoint: 'http://xp-p01.dbc.dk:8016/'
     });
 
     const Promise = PopSuggest.getSuggestions({index: 'term.creator', query: 'Rowl', fields: ['term.creator']});
@@ -37,7 +37,7 @@ describe('Test methods in client.js', () => {
   it('Test getSuggestions Method on bad URL', () => {
     PopSuggest.init({
       name: 'popsuggest',
-      endpoint: 'http://devel7:8888/nonexistingurl/'
+      endpoint: 'http://xp-p01.dbc.dk:8016/nonexistingurl/'
     });
 
     const Promise = PopSuggest.getSuggestions({index: 'term.creator', query: 'Rowl', fields: ['term.creator']});
