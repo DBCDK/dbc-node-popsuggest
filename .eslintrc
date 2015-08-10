@@ -112,7 +112,8 @@
       2,
       2,
       {
-        "indentSwitchCase": true
+        "VariableDeclarator": 2,
+        "SwitchCase": 1
       }
     ],
     "brace-style": 1,
@@ -172,7 +173,9 @@
     ],
     "sort-vars": [
       0,
-      "ignoreCase"
+      {
+        "ignoreCase": true
+      }
     ],
     "space-after-keywords": 2,
     "space-before-blocks": 2,
