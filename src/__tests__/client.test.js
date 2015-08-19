@@ -36,13 +36,14 @@ describe('Test methods in client.js', () => {
     });
   });
 
-  it('Test getSuggestions Method on bad URL', () => {
+  it('Test getPopSuggestions Method on bad URL', () => {
     PopSuggest.init({
       name: 'popsuggest',
-      endpoint: 'http://xp-p01.dbc.dk:8016/nonexistingurl/'
+      endpoint: 'http://xp-p01.dbc.dk',
+      popsuggestPort: 8017
     });
 
-    const Promise = PopSuggest.getPopSuggestions({index: 'term.creator', query: 'Rowl', fields: ['term.creator']});
+    const Promise = PopSuggest.getPopSuggestions({index: 'display.title', query: 'Rowl', fields: ['display.title']});
 
     return Promise.then((data) => {
     }).catch((err) => {
