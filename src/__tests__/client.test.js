@@ -19,28 +19,31 @@ describe('Test methods in client.js', () => {
     config = {endpoint: 'test'};
     expect(() => init(config)).to.not.throw(Error);
 
-    assert.property(init(config), 'getSuggestions');
+    assert.property(init(config), 'getPopSuggestions');
+    assert.property(init(config), 'getEntitySuggestions');
   });
 
-  it('Test getSuggestions Method on good URL', () => {
+  it('Test getPopSuggestions Method on good URL', () => {
     let methods = PopSuggest.init({
       name: 'popsuggest',
-      endpoint: 'http://xp-p01.dbc.dk:8016/'
+      endpoint: 'http://xp-p01.dbc.dk',
+      popsuggestPort: 8016
     });
 
-    const Promise = PopSuggest.getSuggestions({index: 'term.creator', query: 'Rowl', fields: ['term.creator']});
+    const Promise = PopSuggest.getPopSuggestions({index: 'display.title', query: 'Rowl', fields: ['display.title']});
     return Promise.then((data) => {
       assert.isObject(data, 'got object');
     });
   });
 
-  it('Test getSuggestions Method on bad URL', () => {
+  it('Test getPopSuggestions Method on bad URL', () => {
     PopSuggest.init({
       name: 'popsuggest',
-      endpoint: 'http://xp-p01.dbc.dk:8016/nonexistingurl/'
+      endpoint: 'http://xp-p01.dbc.dk',
+      popsuggestPort: 8017
     });
 
-    const Promise = PopSuggest.getSuggestions({index: 'term.creator', query: 'Rowl', fields: ['term.creator']});
+    const Promise = PopSuggest.getPopSuggestions({index: 'display.title', query: 'Rowl', fields: ['display.title']});
 
     return Promise.then((data) => {
     }).catch((err) => {
@@ -51,9 +54,6 @@ describe('Test methods in client.js', () => {
 
       assert.isDefined(err.statusCode, 'statusCode is defined');
       assert.strictEqual(err.statusCode, 404, 'statusCode is 404');
-
-      assert.isDefined(err.statusMessage, 'statusMessage is defined');
-      assert.strictEqual(err.statusMessage, 'Not Found', 'statusMessage is "Nor Found"');
 
       assert.isDefined(err.response, 'response is defined');
       assert.isObject(err.response, 'response is of type object');

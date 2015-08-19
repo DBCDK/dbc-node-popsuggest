@@ -6,18 +6,21 @@ var client = new Client();
 
 let endpoint = null;
 let profile = null;
-let serviceCallback = '';
+let popSuggestWebService = '';
+let entitySuggestWebService = '';
 
 /**
  * Retrieves data from the webservice based on the parameters given
  *
  * @param {Object} params Parameters for the request
+ * @param {string} service
  * @return {Promise}
  */
-function sendRequest(params) {
+function sendRequest(params, service) {
   return new Promise((resolve, reject) => {
-    client.get(serviceCallback, params, (data, response) => {
+    client.get(service, params, (data, response) => {
       if (response.statusCode === 200) {
+        data.params = params;
         resolve(data);
       }
       else {
@@ -32,12 +35,13 @@ function sendRequest(params) {
   });
 }
 
-function setServiceCallback() {
+function setPopSuggestURL(servicePort) {
   const query = '${method}?query=${index}:${query}*';
   const fields = '&fields=${fields}';
   const profileParam = profile ? ' and rec.collectionIdentifier:' + profile : '';
+  const port = ':' + servicePort + '/';
 
-  return endpoint + query + profileParam + fields + '&rows=100';
+  return endpoint + port + query + profileParam + fields + '&rows=100';
 }
 
 /**
@@ -45,10 +49,10 @@ function setServiceCallback() {
  * As the query is expected to be an array it is possible to make multiple
  * requests at once, each returned as a Promise.
  *
- * @param {Array} query Array of parameter-objects each representing a request
- * @return {Array} An array of promises is returned
+ * @param {array} value Array of parameter-objects each representing a request
+ * @return {Promise} A promise is returned
  */
-export function getSuggestions(value) {
+export function getPopSuggestions(value) {
   const params = {
     path: {
       method: 'suggest',
@@ -58,7 +62,35 @@ export function getSuggestions(value) {
     }
   };
 
-  return sendRequest(params);
+  return sendRequest(params, popSuggestWebService);
+}
+
+function setEntitySuggestURL(servicePort) {
+  const query = '${method}/${index}?query=${query}';
+  // const profileParam = profile ? ' and rec.collectionIdentifier:' + profile : '';
+  const port = ':' + servicePort + '/';
+
+  return endpoint + port + query;
+}
+
+/**
+ * Constructs the objects of parameters for this type of request.
+ * As the query is expected to be an array it is possible to make multiple
+ * requests at once, each returned as a Promise.
+ *
+ * @param {array} value Array of parameter-objects each representing a request
+ * @return {Promise} A promise is returned
+ */
+export function getEntitySuggestions(value) {
+  const params = {
+    path: {
+      method: 'entity-suggest',
+      query: value.query,
+      index: value.index
+    }
+  };
+
+  return sendRequest(params, entitySuggestWebService);
 }
 
 /**
@@ -79,11 +111,13 @@ export function init(config = null) {
   }
 
   endpoint = config.endpoint;
-  serviceCallback = setServiceCallback();
+  popSuggestWebService = setPopSuggestURL(config.popsuggestPort);
+  entitySuggestWebService = setEntitySuggestURL(config.entitySuggestPort);
 
-  return {getSuggestions};
+  return {getPopSuggestions, getEntitySuggestions};
 }
 
 export const METHODS = {
-  getSuggestions: getSuggestions
+  getPopSuggestions: getPopSuggestions,
+  getEntitySuggestions: getEntitySuggestions
 };
