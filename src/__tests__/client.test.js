@@ -55,9 +55,6 @@ describe('Test methods in client.js', () => {
       assert.isDefined(err.statusCode, 'statusCode is defined');
       assert.strictEqual(err.statusCode, 404, 'statusCode is 404');
 
-      assert.isDefined(err.statusMessage, 'statusMessage is defined');
-      assert.strictEqual(err.statusMessage, 'Not Found', 'statusMessage is "Nor Found"');
-
       assert.isDefined(err.response, 'response is defined');
       assert.isObject(err.response, 'response is of type object');
     });
