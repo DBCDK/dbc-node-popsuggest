@@ -28,7 +28,7 @@ describe('Test methods in client.js', () => {
       endpoint: 'http://xp-p01.dbc.dk:8016/'
     });
 
-    const Promise = PopSuggest.getSuggestions({index: 'term.creator', query: 'Rowl', fields: ['term.creator']});
+    const Promise = PopSuggest.getPopSuggestions({index: 'term.creator', query: 'Rowl', fields: ['term.creator']});
     return Promise.then((data) => {
       assert.isObject(data, 'got object');
     });
@@ -40,7 +40,7 @@ describe('Test methods in client.js', () => {
       endpoint: 'http://xp-p01.dbc.dk:8016/nonexistingurl/'
     });
 
-    const Promise = PopSuggest.getSuggestions({index: 'term.creator', query: 'Rowl', fields: ['term.creator']});
+    const Promise = PopSuggest.getPopSuggestions({index: 'term.creator', query: 'Rowl', fields: ['term.creator']});
 
     return Promise.then((data) => {
     }).catch((err) => {
