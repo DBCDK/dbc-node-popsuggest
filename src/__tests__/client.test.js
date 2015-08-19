@@ -19,16 +19,18 @@ describe('Test methods in client.js', () => {
     config = {endpoint: 'test'};
     expect(() => init(config)).to.not.throw(Error);
 
-    assert.property(init(config), 'getSuggestions');
+    assert.property(init(config), 'getPopSuggestions');
+    assert.property(init(config), 'getEntitySuggestions');
   });
 
-  it('Test getSuggestions Method on good URL', () => {
+  it('Test getPopSuggestions Method on good URL', () => {
     let methods = PopSuggest.init({
       name: 'popsuggest',
-      endpoint: 'http://xp-p01.dbc.dk:8016/'
+      endpoint: 'http://xp-p01.dbc.dk',
+      popsuggestPort: 8016
     });
 
-    const Promise = PopSuggest.getPopSuggestions({index: 'term.creator', query: 'Rowl', fields: ['term.creator']});
+    const Promise = PopSuggest.getPopSuggestions({index: 'display.title', query: 'Rowl', fields: ['display.title']});
     return Promise.then((data) => {
       assert.isObject(data, 'got object');
     });
