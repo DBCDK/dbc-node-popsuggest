@@ -66,7 +66,7 @@ export function getPopSuggestions(value) {
 }
 
 function setEntitySuggestURL(servicePort) {
-  const query = '${method}/${index}?query=${query}';
+  const query = '${method}/${index}?query=${query}&lt=folkebibliotek';
   // const profileParam = profile ? ' and rec.collectionIdentifier:' + profile : '';
   const port = ':' + servicePort + '/';
 
