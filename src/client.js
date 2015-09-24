@@ -6,6 +6,7 @@ var client = new Client();
 
 let endpoint = null;
 let profile = null;
+let libraryType = null;
 let popSuggestWebService = '';
 let entitySuggestWebService = '';
 
@@ -66,7 +67,7 @@ export function getPopSuggestions(value) {
 }
 
 function setEntitySuggestURL(servicePort) {
-  const query = '${method}/${index}?query=${query}&lt=folkebibliotek';
+  const query = '${method}/${index}?query=${query}&lt=' + libraryType;
   // const profileParam = profile ? ' and rec.collectionIdentifier:' + profile : '';
   const port = ':' + servicePort + '/';
 
@@ -101,7 +102,8 @@ export function getEntitySuggestions(value) {
  * @param {Object} config Config object with the necessary parameters to use
  * the webservice
  */
-export function init(config = null) {
+export function init(config) {
+
   if (!config || !config.endpoint) {
     throw new Error('Expected config object but got null or no endpoint provided');
   }
@@ -111,6 +113,7 @@ export function init(config = null) {
   }
 
   endpoint = config.endpoint;
+  libraryType = config.libraryType || 'folkebibliotek';
   popSuggestWebService = setPopSuggestURL(config.popsuggestPort);
   entitySuggestWebService = setEntitySuggestURL(config.entitySuggestPort);
 
