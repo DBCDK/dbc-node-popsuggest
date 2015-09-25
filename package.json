@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --compilers js:babel/register src/__tests__ -R mocha-jenkins-reporter --timeout 5000",
+    "test:junit": "npm run test",
     "test:watch": "mocha --compilers js:babel/register src/__tests__ -w",
     "build": "npm run cleardest && babel ./src -d dist --ignore __tests__",
     "cleardest": "rm -rf ./dist",
