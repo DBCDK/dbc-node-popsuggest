@@ -15,6 +15,7 @@ var client = new _nodeRestClient.Client();
 
 var endpoint = null;
 var profile = null;
+var libraryType = null;
 var popSuggestWebService = '';
 var entitySuggestWebService = '';
 
@@ -75,7 +76,7 @@ function getPopSuggestions(value) {
 }
 
 function setEntitySuggestURL(servicePort) {
-  var query = '${method}/${index}?query=${query}&lt=folkebibliotek';
+  var query = '${method}/${index}?query=${query}&lt=' + libraryType;
   // const profileParam = profile ? ' and rec.collectionIdentifier:' + profile : '';
   var port = ':' + servicePort + '/';
 
@@ -112,8 +113,7 @@ function getEntitySuggestions(value) {
  * the webservice
  */
 
-function init() {
-  var config = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+function init(config) {
 
   if (!config || !config.endpoint) {
     throw new Error('Expected config object but got null or no endpoint provided');
@@ -124,6 +124,7 @@ function init() {
   }
 
   endpoint = config.endpoint;
+  libraryType = config.libraryType || 'folkebibliotek';
   popSuggestWebService = setPopSuggestURL(config.popsuggestPort);
   entitySuggestWebService = setEntitySuggestURL(config.entitySuggestPort);
 
