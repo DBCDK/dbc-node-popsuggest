@@ -26,7 +26,7 @@ describe('Test methods in client.js', () => {
   it('Test getPopSuggestions Method on good URL', () => {
     let methods = PopSuggest.init({
       name: 'popsuggest',
-      endpoint: 'http://xp-p01.dbc.dk',
+      endpoint: 'http://xp-p02.dbc.dk',
       popsuggestPort: 8016
     });
 
@@ -39,7 +39,7 @@ describe('Test methods in client.js', () => {
   it('Test getPopSuggestions Method on bad URL', () => {
     PopSuggest.init({
       name: 'popsuggest',
-      endpoint: 'http://xp-p01.dbc.dk',
+      endpoint: 'http://xp-p02.dbc.dk',
       popsuggestPort: 8017
     });
 

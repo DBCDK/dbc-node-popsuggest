@@ -1,6 +1,6 @@
 {
   "name": "dbc-node-popsuggest",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Client for the DBC XP suggestion service",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DBCDK/dbc-node-popsuggest"
+    "url": "https://github.com/DBCDK/dbc-node-popsuggest"
   },
   "author": "dbcdk",
   "license": "GNU GPL v3",
