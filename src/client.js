@@ -9,6 +9,7 @@ let profile = null;
 let libraryType = null;
 let popSuggestWebService = '';
 let entitySuggestWebService = '';
+let Logger = null;
 
 /**
  * Retrieves data from the webservice based on the parameters given
@@ -19,12 +20,24 @@ let entitySuggestWebService = '';
  */
 function sendRequest(params, service) {
   return new Promise((resolve, reject) => {
+    if (Logger) {
+      Logger.info('suggest client request with params', params);
+    }
+
     client.get(service, params, (data, response) => {
+      if (Logger) {
+        Logger.info('suggest client responded with data', {path: response.req.path, params: params, data: data});
+      }
+
       if (response.statusCode === 200) {
         data.params = params;
         resolve(data);
       }
       else {
+        if (Logger) {
+          Logger.error('suggest client responded with an error', {path: response.req.path, params: params, statusCode: response.statusCode});
+        }
+
         reject({
           type: 'Error',
           statusCode: response.statusCode,
@@ -68,7 +81,6 @@ export function getPopSuggestions(value) {
 
 function setEntitySuggestURL(servicePort) {
   const query = '${method}/${index}?query=${query}&lt=' + libraryType;
-  // const profileParam = profile ? ' and rec.collectionIdentifier:' + profile : '';
   const port = ':' + servicePort + '/';
 
   return endpoint + port + query;
@@ -110,6 +122,10 @@ export function init(config) {
 
   if (config.profile) {
     profile = config.profile;
+  }
+
+  if (config.logger) {
+    Logger = config.logger;
   }
 
   endpoint = config.endpoint;
