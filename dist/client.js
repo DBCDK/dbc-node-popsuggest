@@ -18,6 +18,7 @@ var profile = null;
 var libraryType = null;
 var popSuggestWebService = '';
 var entitySuggestWebService = '';
+var Logger = null;
 
 /**
  * Retrieves data from the webservice based on the parameters given
@@ -28,11 +29,23 @@ var entitySuggestWebService = '';
  */
 function sendRequest(params, service) {
   return new _es6Promise.Promise(function (resolve, reject) {
+    if (Logger) {
+      Logger.info('suggest client request with params', params);
+    }
+
     client.get(service, params, function (data, response) {
+      if (Logger) {
+        Logger.info('suggest client responded with data', { path: response.req.path, params: params, data: data });
+      }
+
       if (response.statusCode === 200) {
         data.params = params;
         resolve(data);
       } else {
+        if (Logger) {
+          Logger.error('suggest client responded with an error', { path: response.req.path, params: params, statusCode: response.statusCode });
+        }
+
         reject({
           type: 'Error',
           statusCode: response.statusCode,
@@ -77,7 +90,6 @@ function getPopSuggestions(value) {
 
 function setEntitySuggestURL(servicePort) {
   var query = '${method}/${index}?query=${query}&lt=' + libraryType;
-  // const profileParam = profile ? ' and rec.collectionIdentifier:' + profile : '';
   var port = ':' + servicePort + '/';
 
   return endpoint + port + query;
@@ -121,6 +133,10 @@ function init(config) {
 
   if (config.profile) {
     profile = config.profile;
+  }
+
+  if (config.logger) {
+    Logger = config.logger;
   }
 
   endpoint = config.endpoint;
