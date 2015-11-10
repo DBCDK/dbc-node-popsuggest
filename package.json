@@ -18,7 +18,7 @@
     "url": "https://github.com/DBCDK/dbc-node-popsuggest"
   },
   "author": "dbcdk",
-  "license": "GNU GPL v3",
+  "license": "GPL-3.0",
   "dependencies": {
     "lodash": "^3.10.1",
     "request": "^2.60.0"
