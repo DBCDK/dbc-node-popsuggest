@@ -1,63 +1,114 @@
 'use strict';
+/* eslint-disable */
 
 import * as PopSuggest from '../client.js';
 import {assert, expect} from 'chai';
+import sinon from 'sinon';
+import request from 'request'
 
 describe('Test methods in client.js', () => {
-  /* eslint-disable */
+  beforeEach(function (done) {
+    sinon
+      .stub(request, 'get')
+      .yields(null, {
+        statusCode: 200,
+      }, JSON.stringify({
+        response: true
+      }));
+    done();
+  });
+
+  afterEach(function (done) {
+    request.get.restore();
+    done();
+  });
+
   it('Test init method', () => {
     expect(PopSuggest.init).is.not.null;
 
-    const init = PopSuggest.init;
-    assert.isFunction(init, 'init is a function');
+    assert.isFunction(PopSuggest.init, 'init is a function');
 
-    expect(init).to.throw('Expected config object but got null or no endpoint provided');
+    expect(() => PopSuggest.init()).to.throw(Error);
 
     let config = {};
-    expect(() => init(config)).to.throw('Expected config object but got null or no endpoint provided');
+    expect(() => init(config)).to.throw(Error);
 
-    config = {endpoint: 'test'};
-    expect(() => init(config)).to.not.throw(Error);
+    config = {endpoint: 'test', port: 1234};
+    expect(() => PopSuggest.init(config)).to.not.throw(Error);
 
-    assert.property(init(config), 'getPopSuggestions');
-    assert.property(init(config), 'getEntitySuggestions');
+    assert.property(PopSuggest.init(config), 'getPopSuggestions');
   });
 
   it('Test getPopSuggestions Method on good URL', () => {
-    let methods = PopSuggest.init({
+    let popSuggest = PopSuggest.init({
       name: 'popsuggest',
       endpoint: 'http://xp-p02.dbc.dk',
-      popsuggestPort: 8016
+      port: 8016
     });
 
-    const Promise = PopSuggest.getPopSuggestions({index: 'display.title', query: 'Rowl', fields: ['display.title']});
+    const Promise = popSuggest.getPopSuggestions({index: 'display.author', query: 'Rowl', fields: ['display.author', 'display.title'],  filter: ['display.author'], rows: 50});
     return Promise.then((data) => {
+      expect(request.get.firstCall.args[0]).to.be.deep.equal({
+        uri: 'http://xp-p02.dbc.dk:8016/suggest',
+        qs: {
+          query: 'display.author:Rowl*',
+          rows: 50,
+          fields: 'display.author,display.title',
+          filter: 'display.author',
+          start: 0
+        }
+      });
       assert.isObject(data, 'got object');
+      assert.property(data, 'response');
     });
   });
 
-  it('Test getPopSuggestions Method on bad URL', () => {
-    PopSuggest.init({
+  it('Test profile in params', () => {
+    let popSuggest = PopSuggest.init({
       name: 'popsuggest',
       endpoint: 'http://xp-p02.dbc.dk',
-      popsuggestPort: 8017
+      port: 8016,
+      profile: 'test'
     });
 
-    const Promise = PopSuggest.getPopSuggestions({index: 'display.title', query: 'Rowl', fields: ['display.title']});
-
+    const Promise = popSuggest.getPopSuggestions({index: 'display.title', query: 'Rowl', filter: ['display.title']});
     return Promise.then((data) => {
-    }).catch((err) => {
-      assert.isObject(err, 'got error object');
-
-      assert.isDefined(err.type, 'Type is defined');
-      assert.strictEqual(err.type, 'Error', 'Type equals Error');
-
-      assert.isDefined(err.statusCode, 'statusCode is defined');
-      assert.strictEqual(err.statusCode, 404, 'statusCode is 404');
-
-      assert.isDefined(err.response, 'response is defined');
-      assert.isObject(err.response, 'response is of type object');
+      expect(request.get.firstCall.args[0]).to.be.deep.equal({
+        uri: 'http://xp-p02.dbc.dk:8016/suggest',
+        qs: {
+          query: 'display.title:Rowl* and rec.collectionIdentifier:test',
+          rows: 100,
+          fields: null,
+          filter: 'display.title',
+          start: 0
+        }
+      });
+      assert.isObject(data, 'got object');
+      assert.property(data, 'response');
     });
   });
-  /* eslint-enable */
+
+  it('Test default params', () => {
+    let popSuggest = PopSuggest.init({
+      name: 'popsuggest',
+      endpoint: 'http://xp-p02.dbc.dk',
+      port: 8016,
+    });
+
+    const Promise = popSuggest.getPopSuggestions({query: 'Rowl'});
+    return Promise.then((data) => {
+      expect(request.get.firstCall.args[0]).to.be.deep.equal({
+        uri: 'http://xp-p02.dbc.dk:8016/suggest',
+        qs: {
+          query: 'Rowl*',
+          rows: 100,
+          fields: null,
+          filter: null,
+          start: 0
+        }
+      });
+      assert.isObject(data, 'got object');
+      assert.property(data, 'response');
+    });
+  });
 });

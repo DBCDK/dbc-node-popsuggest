@@ -1,15 +1,7 @@
 'use strict';
 
-import {Promise} from 'es6-promise';
-import {Client} from 'node-rest-client';
-var client = new Client();
-
-let endpoint = null;
-let profile = null;
-let libraryType = null;
-let popSuggestWebService = '';
-let entitySuggestWebService = '';
-let Logger = null;
+import request from 'request';
+import {curry} from 'lodash';
 
 /**
  * Retrieves data from the webservice based on the parameters given
@@ -18,46 +10,27 @@ let Logger = null;
  * @param {string} service
  * @return {Promise}
  */
-function sendRequest(params, service) {
+function sendRequest(logger, uri, qs) {
   return new Promise((resolve, reject) => {
-    if (Logger) {
-      Logger.info('suggest client request with params', params);
-    }
-
-    client.get(service, params, (data, response) => {
-      if (Logger) {
-        Logger.info('suggest client responded with data', {path: response.req.path, params: params, data: data});
+    logger.log('suggest client request with params', qs);
+    request.get({uri, qs}, (err, response, body) => {
+      if (err) {
+        logger.error('suggest client responded with an error', {err});
+        reject(err);
       }
-
-      if (response.statusCode === 200) {
-        data.params = params;
-        resolve(data);
+      else if (response.statusCode !== 200) {
+        logger.error('uri responds with fail statusCode', {path: uri, statusCode: response.statusCode});
+        reject(response);
       }
       else {
-        if (Logger) {
-          Logger.error('suggest client responded with an error', {path: response.req.path, params: params, statusCode: response.statusCode});
-        }
-
-        reject({
-          type: 'Error',
-          statusCode: response.statusCode,
-          statusMessage: response.statusMessage,
-          response: response
-        });
+        const data = JSON.parse(body);
+        resolve(data);
+        logger.info('suggest client responded with data', {path: uri, params: qs, data: data});
       }
     });
   });
 }
 
-function setPopSuggestURL(servicePort) {
-  const query = '${method}?query=${index}:${query}*';
-  const fields = '&fields=${fields}';
-  const profileParam = profile ? ' and rec.collectionIdentifier:' + profile : '';
-  const port = ':' + servicePort + '/';
-
-  return endpoint + port + query + profileParam + fields + '&rows=100';
-}
-
 /**
  * Constructs the objects of parameters for this type of request.
  * As the query is expected to be an array it is possible to make multiple
@@ -66,77 +39,40 @@ function setPopSuggestURL(servicePort) {
  * @param {array} value Array of parameter-objects each representing a request
  * @return {Promise} A promise is returned
  */
-export function getPopSuggestions(value) {
-  const params = {
-    path: {
-      method: 'suggest',
-      index: value.index,
-      query: value.query,
-      fields: value.fields.toString()
-    }
+function getPopSuggestions(config, params) {
+  const index = params.index && `${params.index}:` || '';
+  const qs = {
+    query: `${index}${params.query}*${config.profile}`,
+    rows: params.rows || 100,
+    fields: params.fields && params.fields.toString() || null,
+    filter: params.filter && params.filter.toString() || null,
+    start: params.start || 0
   };
-
-  return sendRequest(params, popSuggestWebService);
-}
-
-function setEntitySuggestURL(servicePort) {
-  const query = '${method}/${index}?query=${query}&lt=' + libraryType;
-  const port = ':' + servicePort + '/';
-
-  return endpoint + port + query;
+  return sendRequest(config.logger, config.uri, qs);
 }
 
 /**
- * Constructs the objects of parameters for this type of request.
- * As the query is expected to be an array it is possible to make multiple
- * requests at once, each returned as a Promise.
+ * Initializes client and return api functions
  *
- * @param {array} value Array of parameter-objects each representing a request
- * @return {Promise} A promise is returned
- */
-export function getEntitySuggestions(value) {
-  const params = {
-    path: {
-      method: 'entity-suggest',
-      query: value.query,
-      index: value.index
-    }
-  };
-
-  return sendRequest(params, entitySuggestWebService);
-}
-
-/**
- * Setting the necessary paramerters for the client to be usable.
- * The endpoint is only set if endpoint is null to allow setting it through
- * environment variables.
- *
- * @param {Object} config Config object with the necessary parameters to use
- * the webservice
+ * @param {Object} config Requires endpoint and port
+ * @returns {{getSubjectSuggestions, getCreatorSuggestions, getLibrarySuggestions}}
  */
 export function init(config) {
-
-  if (!config || !config.endpoint) {
-    throw new Error('Expected config object but got null or no endpoint provided');
+  if (!config) {
+    throw new Error('no config object provided');
   }
 
-  if (config.profile) {
-    profile = config.profile;
-  }
+  ['endpoint', 'port'].forEach((key) => {
+    if (!config[key]) {
+      throw new Error(`no ${key} provided in config`);
+    }
+  });
 
-  if (config.logger) {
-    Logger = config.logger;
-  }
+  const uri = `${config.endpoint}:${config.port}/suggest`;
+  const profile = config.profile && ` and rec.collectionIdentifier:${config.profile}` || '';
+  const logger = config.logger || console;
 
-  endpoint = config.endpoint;
-  libraryType = config.libraryType || 'folkebibliotek';
-  popSuggestWebService = setPopSuggestURL(config.popsuggestPort);
-  entitySuggestWebService = setEntitySuggestURL(config.entitySuggestPort);
-
-  return {getPopSuggestions, getEntitySuggestions};
+  return {
+    getPopSuggestions: curry(getPopSuggestions)({logger, uri, profile})
+  };
 }
-
-export const METHODS = {
-  getPopSuggestions: getPopSuggestions,
-  getEntitySuggestions: getEntitySuggestions
-};
