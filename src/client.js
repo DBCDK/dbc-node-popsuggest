@@ -55,7 +55,7 @@ function getPopSuggestions(config, params) {
  * Initializes client and return api functions
  *
  * @param {Object} config Requires endpoint and port
- * @returns {{getSubjectSuggestions, getCreatorSuggestions, getLibrarySuggestions}}
+ * @returns {getPopSuggestions}
  */
 export function init(config) {
   if (!config) {
@@ -69,7 +69,15 @@ export function init(config) {
   });
 
   const uri = `${config.endpoint}:${config.port}/suggest`;
+
+  /**
+   * @HACK
+   * collectionIdentifier defines a subset of posts to search. This should be an argument on the service,
+   * but currently it needs to be part of the search query
+   * @type {string}
+   */
   const profile = config.profile && ` and rec.collectionIdentifier:${config.profile}` || '';
+
   const logger = config.logger || console;
 
   return {
