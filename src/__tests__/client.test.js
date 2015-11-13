@@ -76,10 +76,10 @@ describe('Test methods in client.js', () => {
       expect(request.get.firstCall.args[0]).to.be.deep.equal({
         uri: 'http://xp-p02.dbc.dk:8016/suggest',
         qs: {
-          query: 'display.title:Rowl* and rec.collectionIdentifier:test',
+          query: 'display.title:Rowl*',
           rows: 100,
           fields: null,
-          filter: 'display.title',
+          filter: 'display.title,rec.collectionIdentifier:test',
           start: 0
         }
       });
