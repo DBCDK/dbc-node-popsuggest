@@ -70,15 +70,7 @@ export function init(config) {
   });
 
   const uri = `${config.endpoint}:${config.port}/suggest`;
-
-  /**
-   * @HACK
-   * collectionIdentifier defines a subset of posts to search. This should be an argument on the service,
-   * but currently it needs to be part of the search query
-   * @type {string}
-   */
   const filter = config.profile && [`rec.collectionIdentifier:${config.profile}`] || [];
-
   const logger = config.logger || console;
 
   return {
