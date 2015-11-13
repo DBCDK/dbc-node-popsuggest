@@ -49,11 +49,12 @@ function sendRequest(logger, uri, qs) {
  */
 function getPopSuggestions(config, params) {
   var index = params.index && params.index + ':' || '';
+  var filter = params.filter && params.filter.concat(config.filter) || config.filter;
   var qs = {
-    query: '' + index + params.query + '*' + config.profile,
+    query: '' + index + params.query + '*',
     rows: params.rows || 100,
     fields: params.fields && params.fields.toString() || null,
-    filter: params.filter && params.filter.toString() || null,
+    filter: filter.toString() || null,
     start: params.start || 0
   };
   return sendRequest(config.logger, config.uri, qs);
@@ -85,11 +86,11 @@ function init(config) {
    * but currently it needs to be part of the search query
    * @type {string}
    */
-  var profile = config.profile && ' and rec.collectionIdentifier:' + config.profile || '';
+  var filter = config.profile && ['rec.collectionIdentifier:' + config.profile] || [];
 
   var logger = config.logger || console;
 
   return {
-    getPopSuggestions: (0, _lodash.curry)(getPopSuggestions)({ logger: logger, uri: uri, profile: profile })
+    getPopSuggestions: (0, _lodash.curry)(getPopSuggestions)({ logger: logger, uri: uri, filter: filter })
   };
 }
