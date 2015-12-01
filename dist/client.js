@@ -3,7 +3,7 @@
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-exports.init = init;
+exports['default'] = PopSuggest;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -67,7 +67,7 @@ function getPopSuggestions(config, params) {
  * @returns {getPopSuggestions}
  */
 
-function init(config) {
+function PopSuggest(config) {
   if (!config) {
     throw new Error('no config object provided');
   }
@@ -86,3 +86,5 @@ function init(config) {
     getPopSuggestions: (0, _lodash.curry)(getPopSuggestions)({ logger: logger, uri: uri, filter: filter })
   };
 }
+
+module.exports = exports['default'];

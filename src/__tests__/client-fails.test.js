@@ -1,7 +1,7 @@
 'use strict';
 /* eslint-disable */
 
-import * as EntitySuggest from '../client.js';
+import EntitySuggest from '../client.js';
 import {assert, expect} from 'chai';
 import sinon from 'sinon';
 import request from 'request'
@@ -20,7 +20,7 @@ describe('Test Failing scenarius in client.js', () => {
       }, '<html></html>'
     );
 
-    const popSuggest = EntitySuggest.init({
+    const popSuggest = EntitySuggest({
       endpoint: 'http://xp-p02.dbc.dk',
       port: 8017
     });
@@ -41,7 +41,7 @@ describe('Test Failing scenarius in client.js', () => {
     sinon
       .stub(request, 'get').yields({err: 'failure'});
 
-    const suggest = EntitySuggest.init({
+    const suggest = EntitySuggest({
       endpoint: 'http://xp-p02.dbc.dk',
       port: 8017
     });
