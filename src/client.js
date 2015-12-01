@@ -58,7 +58,7 @@ function getPopSuggestions(config, params) {
  * @param {Object} config Requires endpoint and port
  * @returns {getPopSuggestions}
  */
-export function init(config) {
+export default function PopSuggest(config) {
   if (!config) {
     throw new Error('no config object provided');
   }

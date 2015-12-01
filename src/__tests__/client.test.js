@@ -1,7 +1,7 @@
 'use strict';
 /* eslint-disable */
 
-import * as PopSuggest from '../client.js';
+import PopSuggest from '../client.js';
 import {assert, expect} from 'chai';
 import sinon from 'sinon';
 import request from 'request'
@@ -24,23 +24,23 @@ describe('Test methods in client.js', () => {
   });
 
   it('Test init method', () => {
-    expect(PopSuggest.init).is.not.null;
+    expect(PopSuggest).is.not.null;
 
-    assert.isFunction(PopSuggest.init, 'init is a function');
+    assert.isFunction(PopSuggest, 'init is a function');
 
-    expect(() => PopSuggest.init()).to.throw(Error);
+    expect(() => PopSuggest()).to.throw(Error);
 
     let config = {};
     expect(() => init(config)).to.throw(Error);
 
     config = {endpoint: 'test', port: 1234};
-    expect(() => PopSuggest.init(config)).to.not.throw(Error);
+    expect(() => PopSuggest(config)).to.not.throw(Error);
 
-    assert.property(PopSuggest.init(config), 'getPopSuggestions');
+    assert.property(PopSuggest(config), 'getPopSuggestions');
   });
 
   it('Test getPopSuggestions Method on good URL', () => {
-    let popSuggest = PopSuggest.init({
+    let popSuggest = PopSuggest({
       name: 'popsuggest',
       endpoint: 'http://xp-p02.dbc.dk',
       port: 8016
@@ -64,7 +64,7 @@ describe('Test methods in client.js', () => {
   });
 
   it('Test profile in params', () => {
-    let popSuggest = PopSuggest.init({
+    let popSuggest = PopSuggest({
       name: 'popsuggest',
       endpoint: 'http://xp-p02.dbc.dk',
       port: 8016,
@@ -89,7 +89,7 @@ describe('Test methods in client.js', () => {
   });
 
   it('Test default params', () => {
-    let popSuggest = PopSuggest.init({
+    let popSuggest = PopSuggest({
       name: 'popsuggest',
       endpoint: 'http://xp-p02.dbc.dk',
       port: 8016,
