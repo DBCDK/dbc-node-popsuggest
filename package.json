@@ -1,6 +1,6 @@
 {
   "name": "dbc-node-popsuggest",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Client for the DBC XP suggestion service",
   "main": "index.js",
   "scripts": {
