@@ -79,7 +79,7 @@ describe('Test methods in client.js', () => {
           query: 'display.title:Rowl*',
           rows: 100,
           fields: null,
-          filter: 'display.title,rec.collectionIdentifier:test',
+          filter: 'display.title',
           start: 0
         }
       });

@@ -47,7 +47,7 @@ function sendRequest(uri, qs) {
  */
 function getPopSuggestions(config, params) {
   var index = params.index && params.index + ':' || '';
-  var filter = params.filter && params.filter.concat(config.filter) || config.filter;
+  var filter = params.filter || config.filter;
   var qs = {
     query: '' + index + params.query + '*',
     rows: params.rows || 100,
