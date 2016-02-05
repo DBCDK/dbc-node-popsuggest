@@ -70,13 +70,13 @@ function PopSuggest(config) {
     throw new Error('no config object provided');
   }
 
-  ['endpoint', 'port'].forEach(function (key) {
+  ['endpoint'].forEach(function (key) {
     if (!config[key]) {
       throw new Error('no ' + key + ' provided in config');
     }
   });
 
-  var uri = config.endpoint + ':' + config.port + '/suggest';
+  var uri = config.endpoint;
   var filter = config.profile && ['rec.collectionIdentifier:' + config.profile] || [];
 
   return {

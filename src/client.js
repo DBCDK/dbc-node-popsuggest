@@ -61,13 +61,13 @@ export default function PopSuggest(config) {
     throw new Error('no config object provided');
   }
 
-  ['endpoint', 'port'].forEach((key) => {
+  ['endpoint'].forEach((key) => {
     if (!config[key]) {
       throw new Error(`no ${key} provided in config`);
     }
   });
 
-  const uri = `${config.endpoint}:${config.port}/suggest`;
+  const uri = config.endpoint;
   const filter = config.profile && [`rec.collectionIdentifier:${config.profile}`] || [];
 
   return {
