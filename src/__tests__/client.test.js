@@ -42,8 +42,7 @@ describe('Test methods in client.js', () => {
   it('Test getPopSuggestions Method on good URL', () => {
     let popSuggest = PopSuggest({
       name: 'popsuggest',
-      endpoint: 'http://xp-p02.dbc.dk',
-      port: 8016
+      endpoint: 'http://xp-p02.dbc.dk:8016/suggest'
     });
 
     const Promise = popSuggest.getPopSuggestions({index: 'display.author', query: 'Rowl', fields: ['display.author', 'display.title'],  filter: ['display.author'], rows: 50});
@@ -66,8 +65,7 @@ describe('Test methods in client.js', () => {
   it('Test profile in params', () => {
     let popSuggest = PopSuggest({
       name: 'popsuggest',
-      endpoint: 'http://xp-p02.dbc.dk',
-      port: 8016,
+      endpoint: 'http://xp-p02.dbc.dk:8016/suggest',
       profile: 'test'
     });
 
@@ -91,8 +89,7 @@ describe('Test methods in client.js', () => {
   it('Test default params', () => {
     let popSuggest = PopSuggest({
       name: 'popsuggest',
-      endpoint: 'http://xp-p02.dbc.dk',
-      port: 8016,
+      endpoint: 'http://xp-p02.dbc.dk:8016/suggest'
     });
 
     const Promise = popSuggest.getPopSuggestions({query: 'Rowl'});
